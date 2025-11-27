@@ -11,7 +11,7 @@ function App() {
       <Button>Parent</Button>
     </div>
     <div>
-      <Card name="Kyliann Tonolo" email="Kyliann@gmail.com" phone='07 68 77 84 86'/> 
+      <Card name="Yves" email="Hdmi@gmail.com" phone='06 37 43 84 98'/> 
     </div>
     </>
   );
