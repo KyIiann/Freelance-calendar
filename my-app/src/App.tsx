@@ -1,20 +1,22 @@
-import Card from '../components/ui/card.tsx'
-import Button from '../components/ui/button.tsx'
+import ProfileHeader from '../components/features/ProfileHeader'
+import LinksList from '../components/features/LinksList'
+import BookingCalendar from '../components/features/BookingCalendar'
 import './App.css'
 
 function App() {
   return (
-    <>
-    <div>
-      <h1>Hello World</h1>
-      <Button>children</Button>
-      <Button>Parent</Button>
+    <div style={{maxWidth: 900, margin: '24px auto', background: 'rgba(0,0,0,0.3)', borderRadius: 12, overflow: 'hidden'}}>
+      <ProfileHeader name="Marie Dupont" role="Développeuse front" bio="J'aide les startups à construire des interfaces accessibles et rapides." />
+      <div style={{display: 'flex', gap: 24}}>
+        <aside style={{width: 260, borderRight: '1px solid rgba(255,255,255,0.04)'}}>
+          <LinksList />
+        </aside>
+        <main style={{flex: 1}}>
+          <BookingCalendar />
+        </main>
+      </div>
     </div>
-    <div>
-      <Card name="Yves" email="Hdmi@gmail.com" phone='06 37 43 84 98'/> 
-    </div>
-    </>
-  );
+  )
 }
 
-export default App;
+export default App
