@@ -1,13 +1,17 @@
 import React from 'react'
+import './ProfileHeader.css'
+import Avatar from '../ui/Avatar'
 
 interface Props {
   photoUrl?: string
   name: string
   role: string
   bio?: string
+  links?: { label: string; href: string }[]
+  offers?: { title: string; price?: string; description?: string }[]
 }
 
-export default function ProfileHeader({ photoUrl, name, role, bio }: Props) {
+export default function ProfileHeader({ photoUrl, name, role, bio, links, offers }: Props) {
   const DEFAULT_AVATAR = 'data:image/svg+xml;utf8,' + encodeURIComponent(`
     <svg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'>
       <rect width='100%' height='100%' fill='%23e5e7eb'/>
@@ -15,18 +19,19 @@ export default function ProfileHeader({ photoUrl, name, role, bio }: Props) {
     </svg>`)
 
   return (
-    <header style={{display: 'flex', gap: 16, alignItems: 'center', padding: 16}}>
-      <img
-        src={photoUrl || DEFAULT_AVATAR}
-        alt={`${name} avatar`}
-        width={100}
-        height={100}
-        style={{borderRadius: 12, objectFit: 'cover', flex: '0 0 100px'}}
-      />
-      <div>
-        <h1 style={{margin: 0}}>{name}</h1>
-        <div style={{color: '#6b7280', margin: '6px 0'}}>{role}</div>
-        {bio && <p style={{margin: 0, maxWidth: 520}}>{bio}</p>}
+    <header className="profile">
+      <Avatar name={name} photoUrl={photoUrl} size={92} />
+      <div className="profile-meta">
+        <h1>{name}</h1>
+        <div className="role">{role}</div>
+        {bio && <p>{bio}</p>}
+        {links && links.length > 0 && (
+          <div className="header-links">
+            {links.slice(0, 4).map((l) => (
+              <a key={l.href} href={l.href} {...(l.href.startsWith('#') ? {} : { target: '_blank', rel: 'noreferrer' })} className="small-link">{l.label}</a>
+            ))}
+          </div>
+        )}
       </div>
     </header>
   )

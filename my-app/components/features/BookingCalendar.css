@@ -1,0 +1,15 @@
+.booking { display:flex; flex-direction:column; gap:12px; }
+.booking .date-row { display:flex; gap: 6px; align-items:center; }
+.booking .date-row input[type='date'] { padding: 8px; border-radius:8px; border:1px solid rgba(255,255,255,0.04); background: rgba(255,255,255,0.01); color:var(--text); }
+
+.booking .grid { display:flex; gap:16px; }
+.booking .aside { min-width:220px; }
+.booking .slots { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.booking .slots button { padding:8px; border-radius:6px; background:#081428; border: none; color:var(--text); }
+.booking .slots button.taken { background: rgba(255,255,255,0.02); color: var(--muted); cursor: not-allowed; }
+.booking .slots button.selected { background: var(--accent); color: white; }
+
+.booking .form { flex:1; }
+.booking .form .empty { color: var(--muted); padding: 10px 0; }
+
+@media (max-width: 520px) { .booking .grid { flex-direction: column; } .booking .aside { min-width: 0; } }

@@ -1,0 +1,5 @@
+.offers { padding: 16px; }
+.offers .list { display: grid; gap: 12px; }
+.offers .item { padding: 12px; border-radius: 8px; background: var(--card-bg); }
+.offers .row { display:flex; justify-content:space-between; }
+.offers .cta { display:flex; justify-content:flex-end; margin-top: 8px; }

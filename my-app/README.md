@@ -43,6 +43,32 @@ export default defineConfig([
 ])
 ```
 
+## Backend
+
+This project provides a minimal Express API for bookings in `server/`. See `server/README.md` for instructions to run it locally.
+
+To run both frontend and backend locally using pnpm:
+
+```powershell
+# In the frontend repo
+pnpm dev
+
+# In another terminal, start the backend
+cd server; pnpm install; pnpm start
+```
+
+UI & usage
+----------
+- The app opens with a landing page where you can choose a freelancer.
+- After selection, you reach the freelancer profile page with links and a booking calendar where you can select a slot and book.
+- Booking flow highlights:
+  - Select a freelancer on the landing page.
+  - Choose a date (via the calendar or quick date buttons) and a time slot.
+  - Fill your Prénom, Email, Téléphone (requises) and Société (optionnelle).
+  - Receive a confirmation email after booking (if SMTP configured), otherwise fallback to client-side storage.
+- Bookings are either saved to the backend (if `server` is started) or kept in localStorage when the server is unreachable.
+
+
 You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
 ```js

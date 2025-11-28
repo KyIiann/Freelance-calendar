@@ -1,0 +1,6 @@
+.booking-form { display:flex; flex-direction:column; gap:8px; }
+.booking-form .slot-info { font-weight: 600; margin-bottom: 6px; }
+.booking-form input { display:block; width:100%; padding:10px; border-radius:8px; border:1px solid rgba(255,255,255,0.04); background: rgba(255,255,255,0.01); color:var(--text); }
+.booking-form button { margin-left:auto; padding:10px 14px; border-radius:8px; background: linear-gradient(90deg, var(--accent), var(--accent-600)); color:#fff; border:none; }
+.booking-form .actions { display:flex; gap:8px; align-items:center; }
+.booking-form .message { margin-top:8px; color:var(--success); }

@@ -1,3 +1,5 @@
+import './LinksList.css'
+
 interface LinkItem {
   label: string
   href: string
@@ -5,6 +7,16 @@ interface LinkItem {
 
 interface Props {
   links?: LinkItem[]
+}
+
+function iconFor(href: string) {
+  if (href.includes('linkedin.com')) return '🔗'
+  if (href.includes('github.com')) return '🐙'
+  if (href.includes('dribbble.com')) return '🎨'
+  if (href.includes('behance.net')) return '🎨'
+  if (href.includes('malt.')) return '💼'
+  if (href.startsWith('#')) return '📑'
+  return '🔗'
 }
 
 export default function LinksList({ links }: Props) {
@@ -18,9 +30,10 @@ export default function LinksList({ links }: Props) {
   const list = links && links.length ? links : defaultLinks
 
   return (
-    <nav style={{display: 'flex', flexDirection: 'column', gap: 8, padding: 16}}>
+    <nav className="links">
       {list.map((l) => (
-        <a key={l.href} href={l.href} target="_blank" rel="noreferrer" style={{padding: 12, borderRadius: 8, background: '#111827', color: '#fff', textDecoration: 'none', display: 'inline-block'}}>
+        <a key={l.href} href={l.href} {...(l.href.startsWith('#') ? {} : { target: '_blank', rel: 'noreferrer' })}>
+          <span style={{ marginRight: 8 }} aria-hidden>{iconFor(l.href)}</span>
           {l.label}
         </a>
       ))}
