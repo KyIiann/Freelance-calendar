@@ -7,6 +7,10 @@
 .freelancer-card .meta { display:flex; gap:8px; align-items:center; }
 .freelancer-card .name { font-weight: 700; }
 .freelancer-card .role { color: var(--muted); }
-.freelancer-card .avatar-placeholder { width:64px; height:64px; border-radius:8px; background:#081428; }
+.freelancer-card .avatar-placeholder { width:64px; height:64px; border-radius:8px; overflow:hidden; background:var(--card-bg); display:flex; align-items:center; justify-content:center; }
+
+/* Light theme fixes */
+body[data-theme='light'] .freelancer-card .avatar-placeholder { background: var(--surface); }
+body[data-theme='light'] .freelancer-card { box-shadow: 0 6px 26px rgba(2,6,23,0.04); }
 .freelancer-card .actions { display:flex; justify-content:flex-end; }
 .freelancer-card p { margin: 0; color: var(--muted); }

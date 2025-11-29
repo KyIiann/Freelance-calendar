@@ -57,6 +57,19 @@ pnpm dev
 cd server; pnpm install; pnpm start
 ```
 
+If you want to use the admin UI, set the `VITE_ADMIN_KEY` env var for the frontend (and `ADMIN_KEY` for the server). For example:
+Alternatively, you can login through the Admin UI. Create an admin user on the server using the `ADMIN_KEY` and POST `/api/admin/users` or use the SQL migration; then log in via `POST /api/admin/login` which returns a JWT. The admin UI will store this token in `localStorage` and use it for subsequent admin calls.
+```powershell
+# Frontend (Windows PowerShell)
+$env:VITE_ADMIN_KEY='s3cret'
+pnpm dev
+
+# Server
+cd server
+setx ADMIN_KEY 's3cret' # or put in .env
+pnpm install; pnpm start
+```
+
 UI & usage
 ----------
 - The app opens with a landing page where you can choose a freelancer.

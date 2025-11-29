@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from 'react'
-import { fetchBookingsForDate } from '../../services/bookings'
+import { fetchBookingsForDate } from '../../src/services/bookings'
 import BookingForm from './BookingForm'
 import './BookingCalendar.css'
 
@@ -23,7 +23,8 @@ export default function BookingCalendar({ freelancerId, freelancerName }: Props)
 
   const [date, setDate] = useState<string>(defaultDate)
   const [selectedTime, setSelectedTime] = useState<string | null>(null)
-  const [bookings, setBookings] = useState<{ time: string }[]>([])
+  const [duration, setDuration] = useState<number>(30)
+  const [bookings, setBookings] = useState<any[]>([])
   // messages are shown by BookingForm; no local message here
 
   const slots = useMemo(() => buildSlots(), [])
@@ -75,7 +76,13 @@ export default function BookingCalendar({ freelancerId, freelancerName }: Props)
           <h3>Créneaux disponibles</h3>
           <div className="slots">
             {slots.map((s) => {
-              const taken = bookings.some(b => b.time === s)
+              const slotStart = new Date(`${date}T${s}:00`).getTime()
+              const slotEnd = slotStart + (30 * 60 * 1000) // 30 min default slot
+              const taken = bookings.some(b => {
+                const bStart = new Date(b.start_ts).getTime()
+                const bEnd = bStart + (b.duration_minutes ?? 30) * 60 * 1000
+                return (bStart < slotEnd && bEnd > slotStart)
+              })
               const classes = ['slot', taken ? 'taken' : '', selectedTime === s ? 'selected' : ''].filter(Boolean).join(' ')
               return (
                 <button key={s} type="button" className={classes} onClick={() => !taken && setSelectedTime(s)} disabled={taken}>
@@ -88,8 +95,20 @@ export default function BookingCalendar({ freelancerId, freelancerName }: Props)
 
         <div className="form">
             <h3>Formulaire</h3>
+            <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                Durée
+                <select value={duration} onChange={(e) => setDuration(parseInt(e.target.value))}>
+                  <option value={15}>15</option>
+                  <option value={30}>30</option>
+                  <option value={45}>45</option>
+                  <option value={60}>60</option>
+                </select>
+                min
+              </label>
+            </div>
             {selectedTime ? (
-              <BookingForm date={date} time={selectedTime} onSuccess={() => { setSelectedTime(null); refreshBookings() }} freelancerId={freelancerId} freelancerName={freelancerName} />
+              <BookingForm start_ts={new Date(`${date}T${selectedTime}:00`).toISOString()} duration_minutes={duration} onSuccess={() => { setSelectedTime(null); refreshBookings() }} freelancerId={freelancerId} freelancerName={freelancerName} />
             ) : (
               <div>Veuillez sélectionner un créneau pour afficher le formulaire.</div>
             )}

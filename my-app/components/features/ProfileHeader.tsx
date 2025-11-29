@@ -28,7 +28,17 @@ export default function ProfileHeader({ photoUrl, name, role, bio, links, offers
         {links && links.length > 0 && (
           <div className="header-links">
             {links.slice(0, 4).map((l) => (
-              <a key={l.href} href={l.href} {...(l.href.startsWith('#') ? {} : { target: '_blank', rel: 'noreferrer' })} className="small-link">{l.label}</a>
+              <a key={l.href} href={l.href} {...(l.href.startsWith('#') ? {} : { target: '_blank', rel: 'noreferrer' })} className="small-link">
+                {(() => {
+                  if (l.href.includes('linkedin.com')) return '🔗'
+                  if (l.href.includes('github.com')) return '🐙'
+                  if (l.href.includes('dribbble.com')) return '🎨'
+                  if (l.href.includes('behance.net')) return '🎨'
+                  if (l.href.includes('malt.')) return '💼'
+                  if (l.href.startsWith('#')) return '📑'
+                  return '🔗'
+                })()} {l.label}
+              </a>
             ))}
           </div>
         )}

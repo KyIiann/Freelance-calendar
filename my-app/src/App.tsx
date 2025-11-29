@@ -3,6 +3,7 @@ import LinksList from '../components/features/LinksList'
 import Offers from '../components/features/Offers'
 import BookingCalendar from '../components/features/BookingCalendar'
 import Home from './pages/Home'
+import AdminPage from './pages/Admin'
 import { FREELANCERS } from './data/freelancers'
 import { useState, useEffect } from 'react'
 import ThemeToggle from '../components/ui/ThemeToggle'
@@ -10,6 +11,7 @@ import './App.css'
 
 function App() {
   const [selected, setSelected] = useState<string | null>(null)
+  // support admin mode via special selected value 'admin'
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     try {
       const saved = localStorage.getItem('theme')
@@ -18,7 +20,7 @@ function App() {
     return window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
   })
 
-  const current = selected ? FREELANCERS.find(f => f.id === selected) : null
+  const current = selected && selected !== 'admin' ? FREELANCERS.find(f => f.id === selected) : null
 
   useEffect(() => {
     if (theme) {
@@ -27,7 +29,7 @@ function App() {
     }
   }, [theme])
 
-  if (!current) {
+  if (!current && selected !== 'admin') {
     return (
       <div className="app-shell">
         <div className="app-card">
@@ -45,6 +47,26 @@ function App() {
     )
   }
 
+  if (selected === 'admin') {
+    
+    return (
+      <div className="app-shell">
+        <div className="app-card">
+          <div className="app-header">
+            <div className="header-left">
+              <button className="btn-back" onClick={() => setSelected(null)}>← Retour</button>
+              <h2>Admin</h2>
+            </div>
+            <div className="header-right">
+              <ThemeToggle theme={theme} onToggle={(t) => setTheme(t)} />
+            </div>
+          </div>
+          <AdminPage />
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="app-shell">
       <div className="app-card">
@@ -55,6 +77,7 @@ function App() {
           </div>
           <div className="header-right">
             <ThemeToggle theme={theme} onToggle={(t) => setTheme(t)} />
+            <button className="btn-back" onClick={() => setSelected('admin')}>Admin</button>
           </div>
         </div>
         <ProfileHeader name={current.name} role={current.role} photoUrl={current.photoUrl} bio={current.bio} links={current.links} offers={current.offers} />

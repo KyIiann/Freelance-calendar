@@ -5,9 +5,15 @@
 .booking .grid { display:flex; gap:16px; }
 .booking .aside { min-width:220px; }
 .booking .slots { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-.booking .slots button { padding:8px; border-radius:6px; background:#081428; border: none; color:var(--text); }
+.booking .slots button { padding:8px; border-radius:6px; background:var(--card-bg); border: none; color:var(--text); }
 .booking .slots button.taken { background: rgba(255,255,255,0.02); color: var(--muted); cursor: not-allowed; }
 .booking .slots button.selected { background: var(--accent); color: white; }
+
+/* Light theme overrides */
+body[data-theme='light'] .booking .date-row input[type='date'] { background: #fff; border: 1px solid rgba(0,0,0,0.06); color: var(--text); }
+body[data-theme='light'] .booking .slots button { background: var(--card-bg); color: var(--text); border: 1px solid rgba(0,0,0,0.04); }
+body[data-theme='light'] .booking .slots button.taken { background: var(--surface); color: var(--muted); }
+body[data-theme='light'] .booking .slots button.selected { background: var(--accent); color: #fff; }
 
 .booking .form { flex:1; }
 .booking .form .empty { color: var(--muted); padding: 10px 0; }

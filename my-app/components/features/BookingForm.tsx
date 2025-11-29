@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import { createBooking } from '../../services/bookings'
+import { createBooking } from '../../src/services/bookings'
 import './BookingForm.css'
 
 interface Props {
-  date: string
-  time: string
+  start_ts: string
+  duration_minutes: number
   freelancerId?: string
   freelancerName?: string
   onSuccess?: () => void
@@ -24,7 +24,7 @@ export default function BookingForm({ date, time, onSuccess }: Props) {
     }
     setBusy(true)
     try {
-      await createBooking({ name: form.name, email: form.email, phone: form.phone, company: form.company, date, time, freelancer: freelancerId })
+      await createBooking({ name: form.name, email: form.email, phone: form.phone, company: form.company, start_ts, duration_minutes, freelancer: freelancerId })
       setMessage('Réservation confirmée — un email de confirmation a été envoyé.')
       setForm({ name: '', email: '', phone: '', company: '' })
       if (onSuccess) onSuccess()
@@ -36,10 +36,13 @@ export default function BookingForm({ date, time, onSuccess }: Props) {
     }
   }
 
+  const start = new Date(start_ts)
+  const startLocal = start.toLocaleString()
+
   return (
     <form id="booking-form" onSubmit={handleSubmit} className="booking-form">
       <h3>Vos coordonnées</h3>
-      <div className="slot-info">Créneau: <strong>{date} à {time}</strong></div>
+      <div className="slot-info">Créneau: <strong>{startLocal}</strong> — <span className="text-muted">{duration_minutes} min</span></div>
       {freelancerName && <div className="text-muted">Réservation pour: <strong>{freelancerName}</strong></div>}
       <input required aria-label="Prénom et nom" placeholder="Prénom et nom" value={form.name} onChange={(e) => setForm({...form, name: e.target.value})} />
       <input required aria-label="Email" type="email" placeholder="Email" value={form.email} onChange={(e) => setForm({...form, email: e.target.value})} />
