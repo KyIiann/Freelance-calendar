@@ -1,4 +1,4 @@
-import React from 'react'
+// React import not needed with JSX automatic runtime (react-jsx)
 
 interface Props { theme: 'light' | 'dark'; onToggle: (theme: 'light' | 'dark') => void }
 

@@ -1,4 +1,4 @@
-import React from 'react'
+// React import not needed with JSX automatic runtime (react-jsx)
 import './ProfileHeader.css'
 import Avatar from '../ui/Avatar'
 
@@ -8,15 +8,9 @@ interface Props {
   role: string
   bio?: string
   links?: { label: string; href: string }[]
-  offers?: { title: string; price?: string; description?: string }[]
 }
 
-export default function ProfileHeader({ photoUrl, name, role, bio, links, offers }: Props) {
-  const DEFAULT_AVATAR = 'data:image/svg+xml;utf8,' + encodeURIComponent(`
-    <svg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'>
-      <rect width='100%' height='100%' fill='%23e5e7eb'/>
-      <text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23666' font-size='14'>Avatar</text>
-    </svg>`)
+export default function ProfileHeader({ photoUrl, name, role, bio, links }: Props) {
 
   return (
     <header className="profile">

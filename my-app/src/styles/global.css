@@ -14,8 +14,10 @@
 
 /* Page */
 html, body, #root { height: 100%; }
+html, body { min-height: 100%; }
 body {
   background: linear-gradient(180deg, var(--bg) 0%, #071026 100%);
+  background-attachment: fixed;
   color: var(--text);
   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
   margin: 0; padding: 0;
@@ -23,7 +25,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.app-shell { display: flex; justify-content: center; padding: 48px 16px; }
+.app-shell { display: flex; justify-content: center; padding: 48px 16px; min-height: 100vh; }
 .app-card { width: 100%; max-width: 980px; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-radius: var(--radius); box-shadow: 0 4px 30px rgba(2,6,23,0.5); overflow: hidden; border: 1px solid rgba(255,255,255,0.03); }
 .app-inner { display: grid; grid-template-columns: 260px 1fr; gap: 24px; padding: var(--container-padding); align-items: start; }
 

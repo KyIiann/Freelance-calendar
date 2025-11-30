@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { createBooking } from '../../src/services/bookings'
+import { createBooking } from '@services/bookings'
 import './BookingForm.css'
 
 interface Props {
@@ -10,7 +10,7 @@ interface Props {
   onSuccess?: () => void
 }
 
-export default function BookingForm({ date, time, onSuccess }: Props) {
+export default function BookingForm({ start_ts, duration_minutes, freelancerId, freelancerName, onSuccess }: Props) {
   const [form, setForm] = useState({ name: '', email: '', phone: '', company: '' })
   const [busy, setBusy] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
@@ -28,8 +28,9 @@ export default function BookingForm({ date, time, onSuccess }: Props) {
       setMessage('Réservation confirmée — un email de confirmation a été envoyé.')
       setForm({ name: '', email: '', phone: '', company: '' })
       if (onSuccess) onSuccess()
-    } catch (e: any) {
-      console.error('Booking failed', e)
+    } catch (err: unknown) {
+      console.error('Booking failed', err)
+      const e = err as Error
       setMessage(e?.message || 'Impossible de réserver le créneau — réessayez plus tard.')
     } finally {
       setBusy(false)

@@ -1,6 +1,7 @@
 export interface Booking {
   id: string
   name: string
+  firstname?: string
   email: string
   phone?: string
   company?: string
@@ -49,25 +50,25 @@ export async function createBooking(payload: Omit<Booking, 'id' | 'createdAt'> &
     })
     if (!res.ok) {
       if (res.status === 409) {
-        const payload = await res.json()
-        throw new Error(payload.error || 'Slot already taken')
+        const err = await res.json()
+        throw new Error(err.error || 'Slot already taken')
       }
       throw new Error('Network response not ok')
     }
-    const payload = await res.json()
+    const data = await res.json()
     return {
-      id: String(payload.id),
-      name: payload.firstname || payload.name || '',
-      email: payload.email,
-      phone: payload.phone ?? undefined,
-      company: payload.company ?? undefined,
-      freelancer: payload.freelancer ?? undefined,
-      start_ts: payload.start_ts,
-      duration_minutes: payload.duration_minutes ?? 30,
-      createdAt: payload.created_at || new Date().toISOString(),
-      cancel_token: payload.cancel_token ?? undefined,
+      id: String(data.id),
+      name: data.firstname || data.name || '',
+      email: data.email,
+      phone: data.phone ?? undefined,
+      company: data.company ?? undefined,
+      freelancer: data.freelancer ?? undefined,
+      start_ts: data.start_ts,
+      duration_minutes: data.duration_minutes ?? 30,
+      createdAt: data.created_at || new Date().toISOString(),
+      cancel_token: data.cancel_token ?? undefined,
     } as Booking
-  } catch (e) {
+  } catch (err) {
     const bookings = readAll()
     const id = String(Date.now())
     const createdAt = new Date().toISOString()
@@ -75,6 +76,7 @@ export async function createBooking(payload: Omit<Booking, 'id' | 'createdAt'> &
     bookings.push(booking)
     writeAll(bookings)
     console.info('Booking created locally; server not reachable. Send confirmation email to', booking.email)
+    console.warn('createBooking: failed to reach server, saved locally', err)
     return booking
   }
 }
@@ -87,26 +89,30 @@ export async function fetchBookingsForDate(date: string, freelancer?: string): P
     const res = await fetch(`${apiUrl}/api/bookings?${params.toString()}`)
     if (!res.ok) throw new Error('Network response not ok')
     const payload = await res.json()
-    return (payload as any[]).map((r) => ({
-      id: r.id?.toString() ?? String(Date.now()),
-      name: r.firstname || r.name || '',
-      email: r.email,
-      phone: r.phone ?? undefined,
-      company: r.company ?? undefined,
-      freelancer: r.freelancer ?? undefined,
-      start_ts: r.start_ts,
-      duration_minutes: r.duration_minutes ?? 30,
-      createdAt: r.created_at || new Date().toISOString(),
-      cancel_token: r.cancel_token ?? undefined,
-    }))
-  } catch (e) {
+    if (!Array.isArray(payload)) return []
+    return (payload as unknown[]).map((r) => {
+      const obj = r as Record<string, unknown>
+      return {
+        id: (obj.id as unknown)?.toString?.() ?? String(Date.now()),
+        name: (obj.firstname as string) || (obj.name as string) || '',
+        email: obj.email as string,
+        phone: (obj.phone as string) ?? undefined,
+        company: (obj.company as string) ?? undefined,
+        freelancer: (obj.freelancer as string) ?? undefined,
+        start_ts: obj.start_ts as string,
+        duration_minutes: (obj.duration_minutes as number) ?? 30,
+        createdAt: (obj.created_at as string) || new Date().toISOString(),
+        cancel_token: (obj.cancel_token as string) ?? undefined,
+      }
+    })
+  } catch {
     return getBookingsForDate(date, freelancer)
   }
 }
 
 export async function adminListBookings() {
   const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:4000'
-  const headers: any = {}
+  const headers: Record<string, string> = {}
   const adminToken = typeof window !== 'undefined' ? localStorage.getItem('admin_token') : ''
   const adminKey = (import.meta.env.VITE_ADMIN_KEY as string) || ''
   if (adminToken) headers['Authorization'] = `Bearer ${adminToken}`
@@ -118,7 +124,7 @@ export async function adminListBookings() {
 
 export async function deleteBooking(id: string) {
   const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:4000'
-  const headers: any = {}
+  const headers: Record<string, string> = {}
   const adminToken = typeof window !== 'undefined' ? localStorage.getItem('admin_token') : ''
   const adminKey = (import.meta.env.VITE_ADMIN_KEY as string) || ''
   if (adminToken) headers['Authorization'] = `Bearer ${adminToken}`

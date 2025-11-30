@@ -1,4 +1,4 @@
-import React from 'react'
+// React import not needed with JSX automatic runtime (react-jsx)
 import './avatar.css'
 
 interface Props { name: string; photoUrl?: string; size?: number }

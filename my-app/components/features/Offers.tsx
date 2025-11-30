@@ -1,4 +1,4 @@
-import React from 'react'
+// React import not needed with JSX automatic runtime (react-jsx)
 import './Offers.css'
 
 interface Offer { title: string; price?: string; description?: string }

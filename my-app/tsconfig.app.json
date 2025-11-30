@@ -6,6 +6,11 @@
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "types": ["vite/client"],
+    "baseUrl": ".",
+    "paths": {
+      "@components/*": ["components/*"],
+      "@services/*": ["src/services/*"]
+    },
     "skipLibCheck": true,
 
     /* Bundler mode */
@@ -24,5 +29,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src"]
+  "include": ["src", "components"]
 }

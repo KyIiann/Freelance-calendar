@@ -1,15 +1,16 @@
 import React from 'react'
 import { FREELANCERS } from '../data/freelancers'
+import type { Freelancer } from '../data/freelancers'
 import { getFreelancers } from '../services/freelancers'
 import './Home.css'
-import Avatar from '../../components/ui/Avatar'
+import Avatar from '@components/ui/Avatar'
 
 interface Props {
   onSelect: (id: string) => void
 }
 
 export default function Home({ onSelect }: Props) {
-  const [list, setList] = React.useState<any[]>(FREELANCERS)
+  const [list, setList] = React.useState<Freelancer[]>(FREELANCERS)
 
   React.useEffect(() => {
     let mounted = true

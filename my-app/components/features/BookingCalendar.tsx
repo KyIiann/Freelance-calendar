@@ -1,5 +1,6 @@
-import { useMemo, useState, useEffect } from 'react'
-import { fetchBookingsForDate } from '../../src/services/bookings'
+import { useMemo, useState, useEffect, useCallback } from 'react'
+import type { Booking } from '@services/bookings'
+import { fetchBookingsForDate } from '@services/bookings'
 import BookingForm from './BookingForm'
 import './BookingCalendar.css'
 
@@ -24,7 +25,7 @@ export default function BookingCalendar({ freelancerId, freelancerName }: Props)
   const [date, setDate] = useState<string>(defaultDate)
   const [selectedTime, setSelectedTime] = useState<string | null>(null)
   const [duration, setDuration] = useState<number>(30)
-  const [bookings, setBookings] = useState<any[]>([])
+  const [bookings, setBookings] = useState<Booking[]>([])
   // messages are shown by BookingForm; no local message here
 
   const slots = useMemo(() => buildSlots(), [])
@@ -41,16 +42,27 @@ export default function BookingCalendar({ freelancerId, freelancerName }: Props)
     }
     return arr
   }
-  async function refreshBookings() {
+  const refreshBookings = useCallback(async () => {
     try {
       const b = await fetchBookingsForDate(date, freelancerId)
       setBookings(b)
     } catch {
       setBookings([])
     }
-  }
+  }, [date, freelancerId])
 
-  useEffect(() => { refreshBookings().catch(() => null) }, [date])
+  useEffect(() => {
+    let mounted = true
+    ;(async () => {
+      try {
+        const b = await fetchBookingsForDate(date, freelancerId)
+        if (mounted) setBookings(b)
+      } catch {
+        if (mounted) setBookings([])
+      }
+    })()
+    return () => { mounted = false }
+  }, [date, freelancerId])
 
   // Booking is now handled by BookingForm. Bookings for the selected date are
   // refreshed via fetchBookingsForDate whenever the date changes.

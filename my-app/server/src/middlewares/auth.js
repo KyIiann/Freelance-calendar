@@ -24,3 +24,19 @@ export function requireAdmin(req, res, next) {
     return res.status(403).json({ error: 'Forbidden' })
   }
 }
+
+export function requireAuth(req, res, next) {
+  const authHeader = req.headers['authorization']
+  if (!authHeader) return res.status(401).json({ error: 'Unauthorized' })
+  const token = authHeader.startsWith('Bearer ') ? authHeader.split(' ')[1] : null
+  const jwtSecret = process.env.JWT_SECRET
+  if (!token) return res.status(401).json({ error: 'Unauthorized' })
+  if (!jwtSecret) return res.status(500).json({ error: 'Server misconfiguration: JWT_SECRET not set' })
+  try {
+    const payload = jwt.verify(token, jwtSecret)
+    req.user = payload
+    next()
+  } catch (e) {
+    return res.status(403).json({ error: 'Forbidden' })
+  }
+}

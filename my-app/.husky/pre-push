@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+. "$(dirname "$0")/_/husky.sh"
+
+pnpm test:e2e || (echo "E2E tests failed; pushing anyway"; exit 1)

@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prepare": "husky install",
     "test:e2e": "playwright test",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
@@ -27,6 +28,7 @@
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.46.4",
     "vite": "^7.2.4",
-    "@playwright/test": "^1.45.0"
+    "@playwright/test": "^1.45.0",
+    "husky": "^8.0.0"
   }
 }

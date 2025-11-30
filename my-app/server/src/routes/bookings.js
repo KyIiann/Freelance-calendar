@@ -48,14 +48,33 @@ router.post('/book', async (req, res) => {
         const humanStart = new Date(newStart).toLocaleString()
         const cancelUrl = `${process.env.SERVER_BASE_URL || `http://localhost:${process.env.PORT || 4000}`}/api/bookings/cancel/${rows[0].cancel_token}`
         const html = `
-              <div style="font-family: Arial, sans-serif; color: #111;">
-                <h2>Confirmation de réservation</h2>
-                <p>Bonjour ${firstname},</p>
-                <p>Votre réservation pour <strong>${newStart}</strong> (durée ${duration_minutes} min) a bien été prise en compte${freelancer ? ' pour ' + freelancer : ''}.</p>
-                <p>Si vous souhaitez annuler, cliquez ici: <a href="${cancelUrl}">Annuler la réservation</a></p>
-                <p>Merci !</p>
-              </div>
-            `
+          <div style="font-family: Arial, sans-serif; color: #111;">
+            <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+              <tr>
+                <td style="padding: 12px 0;">
+                  <h2 style="margin:0;">Confirmation de réservation</h2>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:8px 0;">Bonjour ${firstname},</td>
+              </tr>
+              <tr>
+                <td style="padding:8px 0;">Votre rendez-vous le <strong>${humanStart}</strong> pour ${duration_minutes} min a bien été enregistré${freelancer ? ' avec ' + freelancer : ''}.</td>
+              </tr>
+              <tr>
+                <td style="padding:8px 0;">Entreprise: ${company || '—'}<br/>Téléphone: ${phone}</td>
+              </tr>
+              <tr>
+                <td style="padding:16px 0;">
+                  <a href="${cancelUrl}" style="display:inline-block; padding:8px 12px; background:#ef4444; color:#fff; border-radius:6px; text-decoration:none;">Annuler la réservation</a>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:16px 0; color:#666">Merci et à bientôt,</td>
+              </tr>
+            </table>
+          </div>
+        `
         const recipients = [email]
         if (freelancerEmail) recipients.push(freelancerEmail)
         const mailOptions = {
@@ -73,7 +92,7 @@ router.post('/book', async (req, res) => {
       }
     }
 
-    res.json(rows[0])
+    res.status(201).json(rows[0])
   } catch (e) {
     res.status(500).json({ error: e.message })
   }

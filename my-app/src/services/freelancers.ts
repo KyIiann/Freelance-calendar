@@ -16,8 +16,14 @@ export async function getFreelancers() {
   return await res.json()
 }
 
+export async function getFreelancer(id: string) {
+  const res = await fetch(`${API}/api/freelancers/${id}`)
+  if (!res.ok) throw new Error('Failed to load freelancer')
+  return await res.json()
+}
+
 export async function createFreelancer(payload: FreelancerPayload) {
-  const headers: any = { 'Content-Type': 'application/json' }
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' }
   const adminToken = typeof window !== 'undefined' ? localStorage.getItem('admin_token') : ''
   const adminKey = (import.meta.env.VITE_ADMIN_KEY as string) || ''
   if (adminToken) headers['Authorization'] = `Bearer ${adminToken}`
@@ -28,7 +34,7 @@ export async function createFreelancer(payload: FreelancerPayload) {
 }
 
 export async function updateFreelancer(id: string, payload: FreelancerPayload) {
-  const headers: any = { 'Content-Type': 'application/json' }
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' }
   const adminToken = typeof window !== 'undefined' ? localStorage.getItem('admin_token') : ''
   const adminKey = (import.meta.env.VITE_ADMIN_KEY as string) || ''
   if (adminToken) headers['Authorization'] = `Bearer ${adminToken}`
@@ -39,7 +45,7 @@ export async function updateFreelancer(id: string, payload: FreelancerPayload) {
 }
 
 export async function deleteFreelancer(id: string) {
-  const headers: any = {}
+  const headers: Record<string, string> = {}
   const adminToken = typeof window !== 'undefined' ? localStorage.getItem('admin_token') : ''
   const adminKey = (import.meta.env.VITE_ADMIN_KEY as string) || ''
   if (adminToken) headers['Authorization'] = `Bearer ${adminToken}`
@@ -52,7 +58,7 @@ export async function deleteFreelancer(id: string) {
 export async function uploadAvatar(file: File) {
   const form = new FormData()
   form.append('avatar', file)
-  const headers: any = {}
+  const headers: Record<string, string> = {}
   const adminToken = typeof window !== 'undefined' ? localStorage.getItem('admin_token') : ''
   const adminKey = (import.meta.env.VITE_ADMIN_KEY as string) || ''
   if (adminToken) headers['Authorization'] = `Bearer ${adminToken}`

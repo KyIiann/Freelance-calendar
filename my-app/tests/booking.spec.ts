@@ -6,7 +6,7 @@ test('can book a slot and it appears in admin', async ({ page, request }) => {
     const API = process.env.API_URL || 'http://localhost:4000'
     const adminKey = process.env.ADMIN_KEY || 'changeme'
     await request.post(`${API}/api/admin/users`, { headers: { Authorization: `Bearer ${adminKey}` }, data: { email: 'playwright-admin@example.com', password: 'playwright', name: 'Playwright Admin' } })
-  } catch (e) {
+  } catch {
     // ignore if the user already exists or unauthorized
   }
   await page.goto('/')
@@ -16,6 +16,7 @@ test('can book a slot and it appears in admin', async ({ page, request }) => {
   const slot = page.locator('.slots button:not(.taken)').first()
   await expect(slot).toBeVisible()
   const timeText = await slot.textContent()
+  expect(timeText).toBeTruthy()
   await slot.click()
 
   // Fill booking form

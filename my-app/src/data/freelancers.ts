@@ -4,7 +4,9 @@ export interface Freelancer {
   role: string
   bio?: string
   photoUrl?: string
+  avatar_url?: string
   links?: { label: string; href: string }[]
+  offers?: { title: string; price: string; description?: string }[]
 }
 
 export const FREELANCERS: Freelancer[] = [

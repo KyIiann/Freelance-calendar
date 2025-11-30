@@ -81,6 +81,11 @@ UI & usage
   - Receive a confirmation email after booking (if SMTP configured), otherwise fallback to client-side storage.
 - Bookings are either saved to the backend (if `server` is started) or kept in localStorage when the server is unreachable.
 
+Login & registration (client users)
+----------------------------------
+- To create a user account: click "Login" in the header and choose "Créer un compte"; this calls `POST /api/auth/register` and returns a JWT stored in localStorage.
+- To login: click "Login" and choose "Connexion"; this calls `POST /api/auth/login` and stores the JWT in localStorage. The UI will show your email/name in the header when logged in.
+
 
 You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 

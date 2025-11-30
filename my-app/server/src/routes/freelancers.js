@@ -26,6 +26,15 @@ router.get('/', async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }) }
 })
 
+router.get('/:id', async (req, res) => {
+  const id = req.params.id
+  try {
+    const { rows } = await db.query('SELECT id, name, role, bio, avatar_url, links, email, created_at FROM freelancers WHERE id = $1', [id])
+    if (!rows[0]) return res.status(404).json({ error: 'Freelancer not found' })
+    res.json(rows[0])
+  } catch (e) { res.status(500).json({ error: e.message }) }
+})
+
 router.post('/', requireAdmin, async (req, res) => {
   const { name, role, bio, avatar_url, email, links } = req.body
   if (!name) return res.status(400).json({ error: 'name required' })

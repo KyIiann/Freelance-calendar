@@ -36,6 +36,7 @@ Notes
 Additional endpoints & upload
 ----------------------------
 - `GET /api/freelancers` : list freelancers
+- `GET /api/freelancers/:id` : get a single freelancer by id
 - `POST /api/freelancers` : create
 - `PUT /api/freelancers/:id` : update
 - `DELETE /api/freelancers/:id` : delete
@@ -73,6 +74,13 @@ pnpm run seed
 ```
 
 You can then login via `POST /api/admin/login` using the created email & password, and use the returned JWT to call admin endpoints.
+
+Auth for users
+--------------
+Regular users can also register and login to obtain a JWT. Endpoints:
+- `POST /api/auth/register` — body: `{ email, password, name }` returns `{ token }` and user info.
+- `POST /api/auth/login` — body: `{ email, password }` returns `{ token }` and user info.
+- `GET /api/auth/me` — returns `{ user }` when providing `Authorization: Bearer <token>` header.
 
 Email & admin copy
 - The server can send email confirmations to the client who booked a slot (if SMTP is configured).

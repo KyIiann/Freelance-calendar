@@ -20,4 +20,15 @@ export default defineConfig([
       globals: globals.browser,
     },
   },
+  // Prevent incorrect relative imports from top-level 'src' files: they should use ./components/*
+  {
+    files: ['src/*.{ts,tsx}'],
+    rules: {
+      // Forbid imports that try to reach local components in `./components/*` from top-level `src` files.
+      // This helps prevent accidental imports from `src/components` instead of the real `components` root.
+      'no-restricted-imports': ['error', {
+        patterns: ['./components/*']
+      }],
+    },
+  },
 ])
