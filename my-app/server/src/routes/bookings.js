@@ -9,6 +9,8 @@ const router = express.Router()
 router.post('/book', async (req, res) => {
   const { firstname, email, phone, company, start_ts, duration_minutes, freelancer } = req.body
   if (!firstname || !email || !start_ts || !duration_minutes || !phone) return res.status(400).json({ error: 'Missing required fields' })
+  const duration = Number(duration_minutes)
+  if (isNaN(duration) || duration <= 0) return res.status(400).json({ error: 'Invalid duration_minutes' })
   const emailRe = /^[\w-.]+@[\w-]+\.[\w-.]+$/
   if (!emailRe.test(email)) return res.status(400).json({ error: 'Invalid email' })
   const start = new Date(start_ts)
@@ -16,14 +18,16 @@ router.post('/book', async (req, res) => {
   try {
     // check if slot is already booked (overlap) for the same freelancer
     const newStart = start.toISOString()
-    const newEnd = new Date(start.getTime() + (duration_minutes * 60 * 1000)).toISOString()
-    const overlapQuery = `SELECT id FROM bookings WHERE freelancer = $1 AND (start_ts < $2 AND (start_ts + (duration_minutes || ' minutes')::interval) > $3)`
+    const newEnd = new Date(start.getTime() + (duration * 60 * 1000)).toISOString()
+    // Compare overlaps for the same freelancer (handle NULL freelancer which means "no freelancer")
+    // Use duration * interval '1 minute' which is a safe Postgres expression
+    const overlapQuery = `SELECT id FROM bookings WHERE (freelancer = $1 OR ($1 IS NULL AND freelancer IS NULL)) AND (start_ts < $2 AND (start_ts + (duration_minutes * interval '1 minute')) > $3)`
     const slotCheck = await db.query(overlapQuery, [freelancer || null, newEnd, newStart])
     if (slotCheck.rows.length > 0) return res.status(409).json({ error: 'Slot already taken' })
     const cancelToken = crypto.randomBytes(16).toString('hex')
     const { rows } = await db.query(
       'INSERT INTO bookings (firstname, email, phone, company, freelancer, start_ts, duration_minutes, cancel_token) VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING id, firstname, email, phone, company, freelancer, start_ts, duration_minutes, created_at, cancel_token',
-      [firstname, email, phone || null, company || null, freelancer || null, newStart, duration_minutes, cancelToken]
+      [firstname, email, phone || null, company || null, freelancer || null, newStart, duration, cancelToken]
     )
 
     // Optionally send a confirmation email (configure SMTP via env vars)
@@ -40,9 +44,11 @@ router.post('/book', async (req, res) => {
         })
         // try to collect freelancer email to notify them too
         let freelancerEmail = null
+        let freelancerName = null
         if (freelancer) {
           const f = await db.query('SELECT email, name FROM freelancers WHERE id = $1', [freelancer])
           if (f.rows?.[0]) freelancerEmail = f.rows[0].email
+          if (f.rows?.[0]) freelancerName = f.rows[0].name
         }
 
         const humanStart = new Date(newStart).toLocaleString()
@@ -58,8 +64,8 @@ router.post('/book', async (req, res) => {
               <tr>
                 <td style="padding:8px 0;">Bonjour ${firstname},</td>
               </tr>
-              <tr>
-                <td style="padding:8px 0;">Votre rendez-vous le <strong>${humanStart}</strong> pour ${duration_minutes} min a bien été enregistré${freelancer ? ' avec ' + freelancer : ''}.</td>
+                <tr>
+                <td style="padding:8px 0;">Votre rendez-vous le <strong>${humanStart}</strong> pour ${duration} min a bien été enregistré${freelancer ? ' avec ' + (freelancerName || freelancer) : ''}.</td>
               </tr>
               <tr>
                 <td style="padding:8px 0;">Entreprise: ${company || '—'}<br/>Téléphone: ${phone}</td>
@@ -81,7 +87,7 @@ router.post('/book', async (req, res) => {
           from: process.env.SMTP_FROM || process.env.SMTP_USER,
           to: recipients.join(','),
           subject: 'Confirmation de réservation',
-          text: `Bonjour ${firstname} - votre créneau ${humanStart} (${duration_minutes} min) est confirmé.`,
+          text: `Bonjour ${firstname} - votre créneau ${humanStart} (${duration} min) est confirmé.`,
           html,
         }
         // Add admin BCC if set

@@ -11,6 +11,18 @@ test('header modal login redirects to a selected freelancer', async ({ page, req
   await page.route('**/api/bookings?*', async (route) => {
     await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify([]) })
   })
+  await page.route('**/api/freelancers?*', async (route) => {
+    const freelancers = [
+      { id: 'freelancer-1', name: 'Mock One', description: 'Mock 1' },
+      { id: 'freelancer-2', name: 'Mock Two', description: 'Mock 2' },
+    ]
+    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(freelancers) })
+  })
+  await page.route('**/api/freelancers/*', async (route) => {
+    const id = route.request().url().split('/').pop() || 'freelancer-1'
+    const freelancer = { id, name: 'Freelancer ' + id, description: 'Mock freelancer' }
+    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(freelancer) })
+  })
 
   await page.goto('/')
   // capture first freelancer name
