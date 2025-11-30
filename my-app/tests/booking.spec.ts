@@ -9,9 +9,22 @@ test('can book a slot and it appears in admin', async ({ page, request }) => {
   } catch {
     // ignore if the user already exists or unauthorized
   }
+  try {
+    const API = process.env.API_URL || 'http://localhost:4000'
+    await request.post(`${API}/api/auth/register`, { data: { email: 'playwright-user@example.com', password: 'playwright', name: 'Playwright User' } })
+  } catch {
+    // ignore if already exists
+  }
   await page.goto('/')
   // Click first 'Voir le profil' button
   await page.click('text=Voir le profil')
+  // If the login modal appears, log the test user in
+  if (await page.isVisible('input[placeholder="Email"]')) {
+    await page.fill('input[placeholder="Email"]', 'playwright-user@example.com')
+    await page.fill('input[placeholder="Password"]', 'playwright')
+    await page.click('button:has-text("Se connecter")')
+    await page.waitForSelector('.profile h1')
+  }
   // Wait for booking slots to load
   const slot = page.locator('.slots button:not(.taken)').first()
   await expect(slot).toBeVisible()

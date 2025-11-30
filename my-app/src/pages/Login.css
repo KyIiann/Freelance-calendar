@@ -1,0 +1,8 @@
+.login-page { padding: 40px 24px; display: flex; justify-content: center; }
+.login-card { max-width: 420px; width: 100%; background: var(--card-bg); border-radius: var(--radius); box-shadow: 0 8px 28px rgba(2,6,23,0.5); padding: 28px; }
+.login-card h1 { margin: 0 0 6px 0; font-size: 1.6rem; }
+.login-help { color: var(--muted); font-size: 13px; margin-bottom: 12px }
+
+@media (max-width: 520px) {
+  .login-card { padding: 18px; }
+}

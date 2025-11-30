@@ -1,0 +1,60 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - banner [ref=e5]:
+      - generic [ref=e6]:
+        - button [ref=e7] [cursor=pointer]: ← Retour
+        - heading [level=2] [ref=e8]: Mini profil
+      - generic [ref=e9]:
+        - switch [ref=e10] [cursor=pointer]: 🌙
+        - button [ref=e11] [cursor=pointer]: Connexion
+        - dialog [ref=e13]:
+          - button [ref=e15] [cursor=pointer]: ✕
+          - generic [ref=e16]:
+            - generic [ref=e17]:
+              - button [disabled] [ref=e18] [cursor=pointer]: Connexion
+              - button [ref=e19] [cursor=pointer]: Créer un compte
+            - textbox [ref=e21]:
+              - /placeholder: Email
+              - text: playwright-user@example.com
+            - textbox [ref=e23]:
+              - /placeholder: Password
+              - text: playwright
+            - button [ref=e25] [cursor=pointer]: Se connecter
+            - generic [ref=e26]: Failed to fetch
+          - generic [ref=e27]:
+            - text: "Après connexion, tu seras redirigé vers:"
+            - strong [ref=e28]: marie
+    - generic [ref=e29]:
+      - heading [level=1] [ref=e30]: Choisis ton freelance
+      - paragraph [ref=e31]: Sélectionne un profil pour voir ses liens et réserver un créneau
+      - generic [ref=e32]:
+        - generic [ref=e33]:
+          - generic [ref=e34]:
+            - img [ref=e36]
+            - generic [ref=e37]:
+              - generic [ref=e38]: Marie Dupont
+              - generic [ref=e39]: Développeuse front
+          - paragraph [ref=e40]: J'aide les startups à construire des interfaces accessibles et rapides.
+          - button [ref=e42] [cursor=pointer]: Voir le profil
+        - generic [ref=e43]:
+          - generic [ref=e44]:
+            - img [ref=e46]
+            - generic [ref=e47]:
+              - generic [ref=e48]: Jean Dupont
+              - generic [ref=e49]: Design & UX
+          - paragraph [ref=e50]: Designer freelance spécialisé en UX pour produit SaaS.
+          - button [ref=e52] [cursor=pointer]: Voir le profil
+        - generic [ref=e53]:
+          - generic [ref=e54]:
+            - img [ref=e56]
+            - generic [ref=e57]:
+              - generic [ref=e58]: Sam Leclerc
+              - generic [ref=e59]: Full-stack
+          - paragraph [ref=e60]: Node.js / React / PostgreSQL
+          - button [ref=e62] [cursor=pointer]: Voir le profil
+    - contentinfo [ref=e63]: © 2025 Mini-profil — Built with care
+  - generic [ref=e64]: Login dialog ouvert
+```

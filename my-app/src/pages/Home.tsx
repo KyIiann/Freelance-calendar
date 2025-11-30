@@ -7,9 +7,11 @@ import Avatar from '@components/ui/Avatar'
 
 interface Props {
   onSelect: (id: string) => void
+  onOpenLogin?: (next?: string | null) => void
+  userAuth?: { id?: string; name?: string; email?: string } | null
 }
 
-export default function Home({ onSelect }: Props) {
+export default function Home({ onSelect, onOpenLogin, userAuth }: Props) {
   const [list, setList] = React.useState<Freelancer[]>(FREELANCERS)
 
   React.useEffect(() => {
@@ -35,8 +37,15 @@ export default function Home({ onSelect }: Props) {
               </div>
             </div>
             <p>{f.bio}</p>
-            <div className="actions">
-              <button onClick={() => onSelect(f.id)}>Voir le profil</button>
+              <div className="actions">
+              <button onClick={() => {
+                if (!userAuth && onOpenLogin) {
+                  // prefer opening header modal (fast) — call App to open header modal
+                  onOpenLogin(f.id)
+                } else {
+                  onSelect(f.id)
+                }
+              }}>Voir le profil</button>
             </div>
           </div>
         ))}

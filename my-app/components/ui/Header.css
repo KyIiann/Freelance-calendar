@@ -1,0 +1,32 @@
+/* Small header styles (component specific) */
+.app-header .left-wrap { display:flex; gap:10px; align-items:center; }
+.app-header .right-wrap { display:flex; gap:10px; align-items:center; }
+.app-header h2 { font-size: 1rem; }
+.app-header .btn-back { padding: 8px 10px; }
+.app-header .user-name { font-size: 13px; color: var(--muted); }
+
+.app-header .login-wrapper { display:flex; gap:8px; align-items:center; }
+
+.app-header .logo-title { font-weight:700; }
+.app-header .logo-title::after { content:''; display:inline-block; width:8px; height:8px; margin-left:8px; border-radius:50%; background: linear-gradient(90deg,#f59e0b,#fb923c); box-shadow:0 0 8px rgba(245,158,11,0.2); }
+
+@media (max-width: 520px) {
+	.app-header { padding-left: 12px; padding-right: 12px; }
+	.app-header .logo-title { display: none; }
+	.app-header .right-wrap { gap: 6px; }
+}
+
+.header-dropdown {
+	position: absolute;
+	right: 0;
+	top: calc(100% + 8px);
+	background: var(--card-bg);
+	border: 1px solid rgba(255,255,255,0.03);
+	border-radius: 10px;
+	padding: 12px;
+	box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+	width: 280px;
+	z-index: 200000;
+}
+
+.header-dropdown .login-register { margin: 0; width: 100%; }
